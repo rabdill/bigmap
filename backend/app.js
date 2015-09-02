@@ -1,9 +1,9 @@
 var express = require('express');
-var routes = require('./routes');
 var http = require('http');
 var regions = require('./routes/regions');
 var mongoose = require('mongoose');
 
+// DB connection:
 mongoose.connect('mongodb://localhost/bigmap');
 
 var app = express();
@@ -21,7 +21,6 @@ app.use(app.router);
 app.use(express.static(__dirname + '/public'));
 
 // ROUTES HERE!
-app.get('/', routes.index);
 app.get('/regions', regions.index);
 app.post('/regions', regions.create);
 app.post('/regions/init', regions.init);

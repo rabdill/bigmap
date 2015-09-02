@@ -4,6 +4,7 @@ var initRegions = require('../regiondata.js').regions;  // fetch all the initial
 exports.index = function(req, res) {
   Region.find({}, function(err, docs) {
     if(!err) {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
       res.json(200, { regions: docs });
     } else {
       res.json(500, { message: err });
