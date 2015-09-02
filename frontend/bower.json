@@ -1,0 +1,14 @@
+{
+	"name": "bigmap-client",
+	"description": "Front-end app for the BigMap API.",
+	"version": "0.0.0",
+	"homepage": "https://github.com/rabdill/bigmap",
+	"private": true,
+	"dependencies": {
+		"angular": "~1.4.0",
+		"angular-route": "~1.4.0",
+		"angular-loader": "~1.4.0",
+		"angular-mocks": "~1.4.0",
+		"html5-boilerplate": "~5.2.0"
+	}
+}
