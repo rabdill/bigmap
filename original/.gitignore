@@ -1,0 +1,8 @@
+style/foundation*
+style/modernizr*
+style/jquery*
+tmp
+.DS_Store
+
+ideas.txt
+*.min
