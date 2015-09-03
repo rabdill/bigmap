@@ -2,7 +2,7 @@
 
 // Declare app level module which depends on views, and components
 var bigmap = angular.module('bigmap', [
-	'ngRoute',
+	'ngRoute'
 ]);
 
 bigmap.config(['$routeProvider',
@@ -11,6 +11,10 @@ bigmap.config(['$routeProvider',
       when('/', {
         templateUrl: 'partials/list.html',
         controller: 'RegionListCtrl'
+      }).
+			when('/new', {
+        templateUrl: 'partials/list.html',
+        controller: 'NewGameCtrl'
       }).
       otherwise({
         redirectTo: '/'
@@ -28,7 +32,12 @@ bigmap.controller('RegionListCtrl', function ($scope, $http) {
 	$http.get('http://localhost:3000/regions').success(function(data) {
 		console.log(data);
   	$scope.regions = data.regions;
+	});
 });
 
-$scope.orderProp = 'age';
+bigmap.controller('NewGameCtrl', function ($scope, $http, $location) {
+	$http.post('http://localhost:3000/regions/init').success(function(data) {
+		console.log(data);
+  	$location.path('/');
+	});
 });
