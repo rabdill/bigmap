@@ -17,8 +17,14 @@
 		<div id="messages">{{message.text}}</div>
 
 		<div id="regionList">
+			<h3>Your regions:</h3>
 			<ul>
-				<li ng-repeat="region in regions"><strong>{{region.full_name}}</strong>: Strength of {{region.strength}}
+				<li ng-repeat="region in regions | filter: playerRegions"><strong>{{region.full_name}}</strong>: Strength of {{region.strength}}
+			</ul>
+
+			<h3>Enemy regions:</h3>
+			<ul>
+				<li ng-repeat="region in regions | filter: enemyRegions"><strong>{{region.full_name}}</strong>: Strength of {{region.strength}}
 			</ul>
 		</div>
 	</div>
