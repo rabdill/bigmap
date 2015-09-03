@@ -2,6 +2,7 @@ var express = require('express');
 var http = require('http');
 var regions = require('./routes/regions');
 var mongoose = require('mongoose');
+var cors = require('cors')
 
 // DB connection:
 mongoose.connect('mongodb://localhost/bigmap');
@@ -9,6 +10,7 @@ mongoose.connect('mongodb://localhost/bigmap');
 var app = express();
 
 // all environments
+app.use(cors());
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -19,12 +21,6 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(__dirname + '/public'));
-
-// allow CORS:
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
-  next();
-});
 
 // ROUTES HERE!
 app.get('/regions', regions.index);
