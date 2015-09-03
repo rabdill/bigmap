@@ -1,6 +1,7 @@
 <div>
 	<p>What do you do?</p>
 	<ul>
-		<li ng-repeat="choice in choices">{{choice}}
+		<li data-ng-show="show.attack"><a href="#/attack">Stage an attack</a>
+		<li><a href="#/end">End turn</a>
 	</ul>
 </div>
