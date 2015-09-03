@@ -1,10 +1,16 @@
 var Region = require('../models/region').Region;
+var Game = require('../models/game').Game;
 var initRegions = require('../regiondata.js').regions;  // fetch all the initial data
 
 exports.index = function(req, res) {
-  Region.find({}, function(err, docs) {
+  Region.find({}, function(err, regions) {
     if(!err) {
-      res.json(200, { regions: docs });
+      Game.find({}, function(err,game) {
+        res.json(200, {
+          regions: regions,
+          player: game[0].current_player
+        });
+      });
     } else {
       res.json(500, { message: err });
     }
@@ -48,7 +54,24 @@ exports.init = function(req, res) {
         }
       });
     } // end of the 'for' loop iterating through all the regions to create them
-  }); // end of the callback attached to the "remove everything" call
+  }); // end of the callback attached to the "remove all regions" call
+  Game.remove({}, function(err) {
+    if(err) {
+      res.json(500, { message: "Old games could not be deleted: " + err })
+    }
+    console.log('Games deleted');
+
+    var newGame = new Game();
+    console.log("Starting creation process for new game");
+    newGame.current_player = 'Rebels';
+    newGame.save(function(err) {
+      if(!err) {
+          res.json(201, { message: "New game prepared." });
+      } else {
+        res.json(500, {message: "Initialization failed. Could not create new game. Error: " + err});
+      }
+    });
+  }); // end of the callback attached to the "remove game" call
 }
 
 exports.create = function(req, res) {

@@ -32,6 +32,7 @@ bigmap.controller('RegionListCtrl', function ($scope, $http) {
 	$http.get('http://localhost:3000/regions').success(function(data) {
 		console.log(data);
   	$scope.regions = data.regions;
+		$scope.player = data.player;
 	});
 });
 
