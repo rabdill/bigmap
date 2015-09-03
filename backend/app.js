@@ -20,6 +20,12 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(__dirname + '/public'));
 
+// allow CORS:
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
+  next();
+});
+
 // ROUTES HERE!
 app.get('/regions', regions.index);
 app.post('/regions', regions.create);
