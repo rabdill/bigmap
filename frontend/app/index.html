@@ -9,8 +9,19 @@
 </head>
 <body>
   <div><h1>BigMap</h1></div>
-	<div><p><a href="#/new">New game</a></p></div>
 
+	<div data-ng-controller="FrameCtrl">
+		<div><p><button data-ng-click="newGame()">New game</button></p></div>
+
+		<div><h2>{{ player }} turn</h2></div>
+		<div id="messages">{{message.text}}</div>
+
+		<div id="regionList">
+			<ul>
+				<li ng-repeat="region in regions"><strong>{{region.full_name}}</strong>: Strength of {{region.strength}}
+			</ul>
+		</div>
+	</div>
 	<div ng-view></div>
 
 	<script src="bower_components/angular/angular.js"></script>

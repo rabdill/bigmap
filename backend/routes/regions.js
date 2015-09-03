@@ -47,7 +47,12 @@ exports.init = function(req, res) {
         if(!err) {
           completed++;
           if(completed === total) {
-            res.json(201, { message: "New game prepared." });
+            res.json(201, {
+              message : {
+                text : "New game started.",
+                level : "normal"
+              }
+            });
           }
         } else {
           res.json(500, {message: "Initialization failed. Could not create region '" + initRegions[region].full_name + "'. Error: " + err});

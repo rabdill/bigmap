@@ -10,12 +10,8 @@ bigmap.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {
-        templateUrl: 'partials/list.html',
-        controller: 'RegionListCtrl'
-      }).
-			when('/new', {
-        templateUrl: 'partials/list.html',
-        controller: 'NewGameCtrl'
+				templateUrl: 'partials/options.html',
+        controller: 'OptionsCtrl'
       }).
       otherwise({
         redirectTo: '/'
