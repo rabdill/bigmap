@@ -16,6 +16,7 @@ exports.init = function(req, res) {
   console.log("NEW GAME REQUESTED");
   Region.remove({}, function(err) {
     if(err) {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
       res.json(500, { message: "Old records could not be deleted: " + err })
     }
     console.log('Regions deleted');
@@ -42,9 +43,11 @@ exports.init = function(req, res) {
         if(!err) {
           completed++;
           if(completed === total) {
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
             res.json(201, { message: "New game prepared." });
           }
         } else {
+          res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
           res.json(500, {message: "Initialization failed. Could not create region '" + initRegions[region].full_name + "'. Error: " + err});
         }
       });
@@ -80,16 +83,20 @@ exports.create = function(req, res) {
 
 	      newRegion.save(function(err) {
 	        if(!err) {
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
 	          res.json(201, {message: "Region created with name: " + newRegion.full_name });
 	        } else {
+            res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
 	          res.json(500, {message: "Could not create region. Error: " + err});
 	        }
 	      });
 	    } else if(!err) {
 	      // User is trying to create a workout with a name that
 	      // already exists.
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
 	      res.json(403, {message: "Region with that name already exists, please update instead of create or create a new region with a different name."});
 	    } else {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000');
 	      res.json(500, { message: err});
 	    }
 	  }
