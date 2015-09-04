@@ -9,6 +9,7 @@ bigmapCtrl.controller('FrameCtrl', function ($scope, $http) {
 		console.log(data);
   	$scope.regions = data.regions;
 		$scope.player = data.player;
+		$scope.units = data.units;
 	});
 
 	$scope.newGame = function() {
@@ -31,16 +32,15 @@ bigmapCtrl.controller('FrameCtrl', function ($scope, $http) {
 bigmapCtrl.controller('OptionsCtrl', function ($scope, $http) {
 	// all the actions to test:
 	actionTests = {
-    'attack': function(player, regions) {
-			console.log("WE GOT HERE!!!");
+    'attack': function(player, regions, units) {
 			var potentialTargets = false;
-			for(region in regions) {
+			for(var i=0, region; region = regions[i]; i++) {
 				// find the player's regions with a unit to spare
-				if(region.control == player && region.units.length > 1) {
+				if(region.control == player && region.strength > 1) {
 					// make sure there's an available unit in that region
 					var origin = false;
-					for(var i=0, unit; unit=region.units[i]; i++) {
-						if(unit.available) {
+					for(var i=0, unit; unit=units[i]; i++) {
+						if(unit.location === region.abbrev && unit.available) {
 							origin = true;
 						}
 					}
@@ -63,9 +63,10 @@ bigmapCtrl.controller('OptionsCtrl', function ($scope, $http) {
 	$http.get('http://localhost:3000/regions').success(function(data) {
 		$scope.regions = data.regions;
 		$scope.player = data.player;
+		$scope.units = data.units;
 		$scope.show = {};	// whether to display the options
 		for(test in actionTests) {
-			$scope.show[test] = actionTests[test]($scope.player,$scope.regions);
+			$scope.show[test] = actionTests[test]($scope.player,$scope.regions,$scope.units);
 		}
 	});
 });
