@@ -1,14 +1,24 @@
 var Region = require('../models/region').Region;
 var Game = require('../models/game').Game;
+var Unit= require('../models/unit').Unit;
 var initRegions = require('../regiondata.js').regions;  // fetch all the initial data
 
 exports.index = function(req, res) {
   Region.find({}, function(err, regions) {
     if(!err) {
       Game.find({}, function(err,game) {
-        res.json(200, {
-          regions: regions,
-          player: game[0].current_player
+        if(err) {
+          res.json(500, { message: err});
+        }
+        Unit.find({}, function(err,units) {
+          if(err) {
+            res.json(500, { message: err});
+          }
+          res.json(200, {
+            regions: regions,
+            player: game[0].current_player,
+            units: units
+          });
         });
       });
     } else {
@@ -24,7 +34,14 @@ exports.init = function(req, res) {
       res.json(500, { message: "Old records could not be deleted: " + err })
     }
     console.log('Regions deleted');
+    // delete the old units:
+    Unit.remove({}, function(err) {
+      if(err) {
+        res.json(500, {message: "Initialization failed. Could not create new unit. Error: " + err});
+      }
+    });
 
+    // create the new regions:
     var completed = 0;
     var total = Object.keys(initRegions).length; // all the regions
 
@@ -43,16 +60,41 @@ exports.init = function(req, res) {
       newRegion.latlong = initRegions[region].latlong;
       newRegion.labels = initRegions[region].labels;
 
+      // create new units, put em in the region:
+      for(var i=0; i < newRegion.strength; i++) {
+        var newUnit = new Unit();
+        newUnit.location = region;
+        newUnit.save(function(err) {
+          if(!err) {
+            console.log("Made a unit!");
+          } else {
+            res.json(500, {message: "Initialization failed. Could not create new unit. Error: " + err});
+          }
+        });
+      }
+
+      // save the region (doesn't have to wait for the units?!)
       newRegion.save(function(err) {
         if(!err) {
           completed++;
           if(completed === total) {
-            res.json(201, {
-              message : {
-                text : "New game started.",
-                level : "normal"
+            Game.remove({}, function(err) {
+              if(err) {
+                res.json(500, { message: "Old games could not be deleted: " + err })
               }
-            });
+              console.log('Games deleted');
+
+              var newGame = new Game();
+              console.log("Starting creation process for new game");
+              newGame.current_player = 'Rebels';
+              newGame.save(function(err) {
+                if(!err) {
+                    res.json(201, { message: "New game prepared." });
+                } else {
+                  res.json(500, {message: "Initialization failed. Could not create new game. Error: " + err});
+                }
+              });
+            }); // end of the callback attached to the "remove game" call
           }
         } else {
           res.json(500, {message: "Initialization failed. Could not create region '" + initRegions[region].full_name + "'. Error: " + err});
@@ -60,65 +102,4 @@ exports.init = function(req, res) {
       });
     } // end of the 'for' loop iterating through all the regions to create them
   }); // end of the callback attached to the "remove all regions" call
-  Game.remove({}, function(err) {
-    if(err) {
-      res.json(500, { message: "Old games could not be deleted: " + err })
-    }
-    console.log('Games deleted');
-
-    var newGame = new Game();
-    console.log("Starting creation process for new game");
-    newGame.current_player = 'Rebels';
-    newGame.save(function(err) {
-      if(!err) {
-          res.json(201, { message: "New game prepared." });
-      } else {
-        res.json(500, {message: "Initialization failed. Could not create new game. Error: " + err});
-      }
-    });
-  }); // end of the callback attached to the "remove game" call
-}
-
-exports.create = function(req, res) {
-  var abbrev = req.body.abbrev; // abbreviation of region
-  var full_name = req.body.full_name;
-  var attackable = req.body.attackable; // list of neighboring regions
-  var control = req.body.control; // which player controls it
-  var strength = req.body.strength; // number of units garrisoned there
-  var latlong = req.body.latlong; // array of lat/long shape data
-  var labels = req.body.labels; // coordinates of where the labels should go
-
-	Region.findOne({'abbrev': abbrev},
-		function(err, doc) {
-	    if(!err && !doc) { // if it doesn't exist yet
-	      var newRegion = new Region();
-        newRegion.abbrev = abbrev;
-        newRegion.full_name = full_name;
-
-        if(attackable) {
-          for(var i=0, r; r = attackable[i]; i++) {
-            newRegion.attackable.push(r);
-          }
-        }
-        newRegion.control = control;
-        newRegion.strength = strength;
-        newRegion.latlong = latlong;
-        newRegion.labels = labels;
-
-	      newRegion.save(function(err) {
-	        if(!err) {
-	          res.json(201, {message: "Region created with name: " + newRegion.full_name });
-	        } else {
-	          res.json(500, {message: "Could not create region. Error: " + err});
-	        }
-	      });
-	    } else if(!err) {
-	      // User is trying to create a workout with a name that
-	      // already exists.
-	      res.json(403, {message: "Region with that name already exists, please update instead of create or create a new region with a different name."});
-	    } else {
-	      res.json(500, { message: err});
-	    }
-	  }
-	);
 }

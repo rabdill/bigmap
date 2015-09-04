@@ -24,7 +24,6 @@ app.use(express.static(__dirname + '/public'));
 
 // ROUTES HERE!
 app.get('/regions', regions.index);
-app.post('/regions', regions.create);
 app.post('/regions/init', regions.init);
 
 // Aaaaand here we go:

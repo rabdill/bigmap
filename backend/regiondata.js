@@ -38,7 +38,7 @@ module.exports = {
 				"oh"
 			],
 			"control" : "Govt",
-			"strength" : 5,
+			"strength" : 1,
 			"latlong" : [
 				[41.36, -74.7],
 				[40.45, -75.07],
@@ -63,7 +63,7 @@ module.exports = {
 				"nj"
 			],
 			"control" : "Rebels",
-			"strength" : 5,
+			"strength" : 1,
 			"latlong" : [
 				[42.39, -79.79],
 				[41.98, -79.79],
@@ -91,7 +91,7 @@ module.exports = {
 				"nj"
 			],
 			"control" : "Rebels",
-			"strength" : 5,
+			"strength" : 1,
 			"latlong" : [
 				[39.62, -75.56],
 				[39.15, -75.39],
@@ -115,7 +115,7 @@ module.exports = {
 				"wv"
 			],
 			"control" : "Govt",
-			"strength" : 5,
+			"strength" : 1,
 			"latlong" : [
 				[38.42, -75.05],
 				[37.31, -75.94],
@@ -147,7 +147,7 @@ module.exports = {
 				"wv"
 			],
 			"control" : "Govt",
-			"strength" : 5,
+			"strength" : 1,
 			"latlong" : [
 				[38.87, -77.01], //dc
 				[39.14, -77.52],
@@ -178,8 +178,8 @@ module.exports = {
 				"va",
 				"oh"
 			],
-			"control" : "Rebels",
-			"strength" : 5,
+			"control" : "Govt",
+			"strength" : 1,
 			"latlong" : [
 				[39.32, -77.71], // start of WV border
 				[39.13, -77.83],
@@ -214,8 +214,8 @@ module.exports = {
 				"pa",
 				"wv"
 			],
-			"control" : "Govt",
-			"strength" : 5,
+			"control" : "Rebels",
+			"strength" : 1,
 			"latlong" : [
 				[38.44, -82.55], // end of ky border, start of OH
 				[39.02, -82.01],
