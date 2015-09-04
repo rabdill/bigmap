@@ -104,6 +104,13 @@ bigmapCtrl.controller('TargetCtrl', function ($scope, $http, Finder) {
 	});
 });
 
-bigmapCtrl.controller('AttackerCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {
+bigmapCtrl.controller('AttackersCtrl', ['$scope', '$routeParams', '$http', 'Finder', function($scope, $routeParams, $http, Finder) {
     $scope.tregion = $routeParams.tregion;
-  }]);
+		$scope.finder = Finder;
+		$http.get('http://localhost:3000/regions').success(function(data) {
+			$scope.finder.region($scope.tregion, data.regions, function(newRegion) {
+				$scope.target = newRegion;
+			});
+		});
+  }
+]);
