@@ -15,7 +15,10 @@
 
 		<div><h2>{{ player }} turn</h2></div>
 		<div id="messages">{{message.text}}</div>
-
+		<div id="unitList">
+			<ul>
+				<li ng-repeat="unit in units"><strong>{{unit._id}}</strong>: {{unit.location}}, exp of {{unit.experience}}</li>
+			</ul>
 		<div id="regionList">
 			<h3>Your regions:</h3>
 			<ul>
@@ -35,5 +38,6 @@
 	<script src="bower_components/angular-resource/angular-resource.js"></script>
 	<script src="app.js"></script>
 	<script src="controllers.js"></script>
+	<script src="services.js"></script>
 </body>
 </html>

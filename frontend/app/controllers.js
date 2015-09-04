@@ -1,12 +1,12 @@
 var bigmapCtrl = angular.module('bigmapControllers', [
-	'ngRoute'
+	'ngRoute',
+	'bigmapServices'
 ]);
 
 // all the general stuff that's always there:
 //		* note to self: this is almost certainly wrong.
 bigmapCtrl.controller('FrameCtrl', function ($scope, $http) {
 	$http.get('http://localhost:3000/regions').success(function(data) {
-		console.log(data);
   	$scope.regions = data.regions;
 		$scope.player = data.player;
 		$scope.units = data.units;
@@ -70,3 +70,40 @@ bigmapCtrl.controller('OptionsCtrl', function ($scope, $http) {
 		}
 	});
 });
+
+bigmapCtrl.controller('TargetCtrl', function ($scope, $http, Finder) {
+	$http.get('http://localhost:3000/regions').success(function(data) {
+  	$scope.regions = data.regions;
+		$scope.player = data.player;
+		$scope.units = data.units;
+		$scope.finder = Finder;
+
+		$scope.targets = [];
+		for(var i=0, region; region = $scope.regions[i]; i++) {
+			// find the player's regions with a unit to spare
+			if(region.control == $scope.player && region.strength > 1) {
+				// make sure there's an available unit in that region
+				var origin = false;
+				for(var j=0, unit; unit=$scope.units[j]; j++) {
+					if(unit.location === region.abbrev && unit.available) {
+						origin = true;
+					}
+				}
+				if(origin) {	// if we're dealing with a region we can attack from
+					// check all the neighbors of that region
+					for(var j=0, potential; potential=region.attackable[j]; j++) {
+						$scope.finder.region(potential, $scope.regions, function(newTarget) {
+							if(newTarget.control !== $scope.player && $scope.targets.indexOf(newTarget) === -1) {
+								$scope.targets.push(newTarget);
+							}
+						});
+					}
+				}
+			}
+		}
+	});
+});
+
+bigmapCtrl.controller('AttackerCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {
+    $scope.tregion = $routeParams.tregion;
+  }]);

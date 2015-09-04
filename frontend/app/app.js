@@ -13,6 +13,14 @@ bigmap.config(['$routeProvider',
 				templateUrl: 'partials/options.html',
         controller: 'OptionsCtrl'
       }).
+			when('/attack', {
+				templateUrl: 'partials/choose_target.html',
+        controller: 'TargetCtrl'
+      }).
+			when('/attack/:tregion', {
+				templateUrl: 'partials/choose_attackers.html',
+        controller: 'AttackersCtrl'
+      }).
       otherwise({
         redirectTo: '/'
       });
